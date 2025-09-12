@@ -1,0 +1,38 @@
+# Django
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+db.sqlite3
+*.sqlite3
+.env
+.env.*
+*.log
+media/
+staticfiles/
+# If using Django migrations
+*/migrations/*.pyc
+*/migrations/__pycache__/
+# VSCode
+.vscode/
+
+# React
+node_modules/
+build/
+dist/
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+# MacOS
+.DS_Store
+
+# General
+*.swp
+*.swo
+.idea/
+*.bak
+*.tmp

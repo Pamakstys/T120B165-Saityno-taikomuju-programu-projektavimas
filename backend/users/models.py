@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from .managers import UserManager
+from .managers.UserManager import UserManager
 from datetime import timedelta
 from django.utils import timezone
 

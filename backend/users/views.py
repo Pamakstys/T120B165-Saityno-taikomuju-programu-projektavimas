@@ -1,3 +1,4 @@
+import os
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.exceptions import AuthenticationFailed
@@ -9,8 +10,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 
 
 # Create your views here.
-#TODO: Export the secret to a config and add to gitignore.
-SECRET = 'secret'
+SECRET = os.getenv('JWT_SECRET', 'secret')
 
 class RegisterView(APIView):
     permission_classes = [AllowAny]
@@ -69,7 +69,7 @@ class UserView(APIView):
         return Response(serializer.data)
     
 class LogoutView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     def post(self, request):
         response = Response()
         response.delete_cookie('jwt')

@@ -7,6 +7,8 @@ services:
       - "8001:8001"
     env_file:
       - ./backend/.env
+    volumes:
+      - ./backend/media:/app/media
     restart: unless-stopped
 
   frontend-react:
@@ -15,6 +17,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3000:80"
+    volumes:
+      - ./backend/media:/usr/share/nginx/html/media
     depends_on:
       - backend-react
     restart: unless-stopped

@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y \
     gcc \
     && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /app/backend
+WORKDIR /app
 
 COPY requirements.txt /app/requirements.txt
 
@@ -24,5 +24,5 @@ COPY . .
 
 EXPOSE 8001
 
-CMD ["sh", "-c", "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn backend.wsgi:application --bind 0.0.0.0:8001"]
+CMD ["sh", "-c", "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn core.wsgi:application --bind 0.0.0.0:8001"]
 

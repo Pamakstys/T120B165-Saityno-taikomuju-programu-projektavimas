@@ -23,32 +23,55 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const apiUrl = import.meta.env.VITE_API_URL;
 
   const refreshUser = async () => {
-    try {
-      const res = await fetch(`${apiUrl}/user`, {
-        method: "GET",
-        credentials: "include",
-      });
-
-      if (res.ok) {
-        const data: User = await res.json();
-        setUser(data);
-      } else {
-        setUser(null);
-      }
-    } catch {
-      setUser(null);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const logout = async () => {
-    await fetch(`${apiUrl}/logout`, {
-      method: "POST",
+  try {
+    const res = await fetch(`${apiUrl}/user`, {
+      method: "GET",
       credentials: "include",
     });
+
+    if (res.ok) {
+      const data: User = await res.json();
+      setUser(data);
+    } else {
+      try {
+        const data = await res.json();
+        if (data?.detail === "Token Expired") {
+          setUser(null);
+          window.location.href = "/login";
+          return;
+        }
+      } catch {
+        // ignore JSON parse errors
+      }
+      setUser(null);
+    }
+  } catch {
     setUser(null);
-  };
+  } finally {
+    setLoading(false);
+  }
+};
+
+  const logout = async () => {
+  const res = await fetch(`${apiUrl}/logout`, {
+    method: "POST",
+    credentials: "include",
+  });
+
+  if (res.status === 403) {
+    try {
+      const data = await res.json();
+      if (data?.detail === "Token Expired") {
+        setUser(null);
+        return;
+      }
+    } catch {
+      // ignore JSON parse errors
+    }
+  }
+
+  setUser(null);
+};
 
   useEffect(() => {
     refreshUser();

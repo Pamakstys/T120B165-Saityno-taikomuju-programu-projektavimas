@@ -145,7 +145,7 @@ class SongViewSet(viewsets.ModelViewSet):
             return Response({"error": "Song ID is required"}, status=status.HTTP_400_BAD_REQUEST)
         
         song = get_object_or_404(Song, id=song_id)
-        serializer = self.get_serializer(song, data=request.data, files=request.FILES, partial=True)
+        serializer = self.get_serializer(song, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

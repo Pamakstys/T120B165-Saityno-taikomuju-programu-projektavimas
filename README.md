@@ -27,15 +27,16 @@ Naudotojas, turintis **Publisher** rolę, galės:
 2. Redaguoti ir šalinti savo pridėtus atlikėjus, albumus ir dainas;  
 
 Administratorius galės:  
-2. Suteikti ar atimti **Publisher** rolę;  
-4. Šalinti naudotojus;  
-5. Šalinti netinkamus įrašus (atlikėjus, albumus, dainas).  
+1. Suteikti ar atimti **Publisher** rolę;  
+2. Šalinti naudotojus;  
+3. Šalinti netinkamus įrašus (atlikėjus, albumus, dainas).  
 
 ---
 
 2. Sistemos architektūra  
 Sistemos sudedamosios dalys:  
-- **Kliento pusė (Front-End)** – naudojant React typescript;  
-- **Serverio pusė (Back-End)** – Python django. Duomenų bazė – MySQL.  
+- **Kliento pusė (angl. Front-end)** – naudojant React bei typescript technologijas
+- **Serverio pusė (angl. Back-End)** – naudojant Python django technologiją
+- **Duomenų bazė (angl. Database)** – naudojant MySQL technologiją 
 
-2.1 pav. pavaizduota kuriamos sistemos diegimo diagrama. Sistemos talpinimui naudojamas **Oracle** serveris. Kiekviena sistemos dalis yra diegiama tame pačiame serveryje. Internetinė aplikacija yra pasiekiama per HTTP protokolą. 
+![Architektura.png](https://github.com/Pamakstys/T120B165-Saityno-taikomuju-programu-projektavimas/blob/main/architektura.png)

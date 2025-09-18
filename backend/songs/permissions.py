@@ -5,15 +5,14 @@ class CustomRoleBasedPermission(permissions.BasePermission):
     Allow or deny based on user role and HTTP method for APIView.
     """
     def has_permission(self, request, view):
-        return True
         if not request.user.is_authenticated:
             return False
         action = view.action
 
-        if action in ['get_artist', 'list_artists', 'get_song', 'list_songs', 'get_album', 'list_albums']:
+        if action in ['get_artist', 'list_artists', 'get_song', 'list_songs','list_songs_by_album', 'get_album', 'list_albums', 'list_albums_by_artist']:
             return request.user.is_authenticated
 
-        if action in ['create_artist', 'edit_artist', 'create_song', 'edit_song', 'create_album', 'edit_album']:
+        if action in ['create_artist', 'edit_artist', 'delete_artist', 'my_artists', 'is_owner', 'create_song', 'edit_song','delete_song', 'create_album', 'edit_album', 'delete_album']:
             return request.user.role in ['admin', 'publisher']
 
         #Retrict default DRF's

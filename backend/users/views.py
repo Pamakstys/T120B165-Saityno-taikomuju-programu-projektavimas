@@ -15,6 +15,7 @@ SECRET = os.getenv('JWT_SECRET', 'secret')
 
 class RegisterView(APIView):
     permission_classes = [AllowAny]
+    authentication_classes = []
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)

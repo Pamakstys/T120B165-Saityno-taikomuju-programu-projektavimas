@@ -24,7 +24,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const apiUrl = import.meta.env.VITE_API_URL;
 
   const login = async (email: string, password: string) => {
-    const response = await fetch(`${apiUrl}/users/login`, {
+    const response = await fetch(`${apiUrl}/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -43,7 +43,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const refreshToken = async (): Promise<boolean> => {
     try {
-      const response = await fetch(`${apiUrl}/users/refresh/`, {
+      const response = await fetch(`${apiUrl}/refresh/`, {
         method: "POST",
         credentials: "include",
       });
@@ -59,7 +59,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const fetchUser = async () => {
     try {
-      const response = await fetch(`${apiUrl}/users/user`, {
+      const response = await fetch(`${apiUrl}/user`, {
         credentials: "include",
       });
 
@@ -78,7 +78,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const logout = async () => {
     try {
-      await fetch(`${apiUrl}/users/logout`, {
+      await fetch(`${apiUrl}/logout`, {
         method: "POST",
         credentials: "include",
       });

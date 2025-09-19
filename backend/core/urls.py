@@ -22,16 +22,22 @@ from django.conf import settings
 from django.conf.urls.static import static
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 from rest_framework.permissions import AllowAny
+from rest_framework.decorators import api_view, permission_classes
 
+@api_view(['GET'])
+@permission_classes([AllowAny])
 def serve_api_schema(request):
     schema_path = os.path.join(settings.BASE_DIR, 'api-spec.yaml')
     return FileResponse(open(schema_path, 'rb'), content_type='application/yaml')
 
+
 class PublicSpectacularSwaggerView(SpectacularSwaggerView):
     permission_classes = [AllowAny]
+    authentication_classes = []
 
 class PublicSpectacularRedocView(SpectacularRedocView):
     permission_classes = [AllowAny]
+    authentication_classes = []
 
 urlpatterns = [
     path('admin/', admin.site.urls),

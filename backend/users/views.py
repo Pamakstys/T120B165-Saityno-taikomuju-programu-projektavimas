@@ -38,7 +38,7 @@ class LoginView(APIView):
         
         payload = {
             'id':user.id,
-            'exp':datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=10),
+            'exp':datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=4),
             'iat': datetime.datetime.now(datetime.timezone.utc),
             'role': user.role,
             'type': 'access'
@@ -46,7 +46,7 @@ class LoginView(APIView):
         
         refresh_payload = {
             'id': user.id,
-            'exp': datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=10),
+            'exp': datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=5),
             'iat': datetime.datetime.now(datetime.timezone.utc),
             'type': 'refresh'
         }
@@ -92,7 +92,7 @@ class RefreshTokenView(APIView):
         # Generate new access token
         new_payload = {
             'id': user.id,
-            'exp': datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=15),
+            'exp': datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=4),
             'iat': datetime.datetime.now(datetime.timezone.utc),
             'role': user.role,
             'type': 'access'

@@ -38,7 +38,6 @@ class LoginView(APIView):
         
         payload = {
             'id':user.id,
-            # 'exp':datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=60),
             'exp':datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(seconds=10),
             'iat': datetime.datetime.now(datetime.timezone.utc),
             'type': 'access'
@@ -148,7 +147,7 @@ class LogoutView(APIView):
     def post(self, request):
         response = Response()
         response.delete_cookie('jwt')
-        respone.delete_cookie('refresh_jwt')
+        response.delete_cookie('refresh_jwt')
         response.data = {
             'message':'success'
         }

@@ -10,6 +10,7 @@ type User = {
 
 interface AuthContextType {
   user: User | null;
+  loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   refreshToken: () => Promise<boolean>;
@@ -36,7 +37,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       throw new Error("Login failed");
     }
 
-    const data = await response.json();
+    await response.json();
     await fetchUser();
   };
 
@@ -92,7 +93,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, refreshToken }}>
+    <AuthContext.Provider value={{ user, loading, login, logout, refreshToken }}>
       {children}
     </AuthContext.Provider>
   );

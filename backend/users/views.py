@@ -39,14 +39,14 @@ class LoginView(APIView):
         payload = {
             'id':user.id,
             # 'exp':datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=60),
-            'exp':datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(seconds=15),
+            'exp':datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(seconds=10),
             'iat': datetime.datetime.now(datetime.timezone.utc),
             'type': 'access'
         }
         
         refresh_payload = {
             'id': user.id,
-            'exp': datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=30),
+            'exp': datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=10),
             'iat': datetime.datetime.now(datetime.timezone.utc),
             'type': 'refresh'
         }
@@ -56,6 +56,7 @@ class LoginView(APIView):
 
         response = Response()
         response.set_cookie(key='jwt', value=token, httponly=True)
+        response.set_cookie(key='refresh_jwt', value=refresh_token, httponly=True)
         response.data = {
             'jwt': token,
             'refresh_token': refresh_token
@@ -101,7 +102,7 @@ class RefreshTokenView(APIView):
         response = Response({'message': 'Token refreshed'})
         response.set_cookie(key='jwt', value=new_access_token, httponly=True)
         response.data = {
-            'jwt': new_access_token
+            'jwt': new_access_token,
         }
         
         return response
@@ -147,6 +148,7 @@ class LogoutView(APIView):
     def post(self, request):
         response = Response()
         response.delete_cookie('jwt')
+        respone.delete_cookie('refresh_jwt')
         response.data = {
             'message':'success'
         }

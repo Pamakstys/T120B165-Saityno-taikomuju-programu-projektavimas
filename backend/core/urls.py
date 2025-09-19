@@ -29,6 +29,7 @@ def serve_api_schema(request):
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('users.urls')),
+    path('api/', include('users.urls')),
     path('api/', include('songs.urls')),
     path('api/schema/', serve_api_schema, name='schema'),
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),

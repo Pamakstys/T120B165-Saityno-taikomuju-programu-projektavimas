@@ -22,9 +22,10 @@ from django.conf import settings
 from django.conf.urls.static import static
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 from rest_framework.permissions import AllowAny
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
 
 @api_view(['GET'])
+@authentication_classes([]) 
 @permission_classes([AllowAny])
 def serve_api_schema(request):
     schema_path = os.path.join(settings.BASE_DIR, 'api-spec.yaml')

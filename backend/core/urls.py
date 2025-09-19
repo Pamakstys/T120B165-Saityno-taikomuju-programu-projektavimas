@@ -21,18 +21,25 @@ from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
+from rest_framework.permissions import AllowAny
 
 def serve_api_schema(request):
     schema_path = os.path.join(settings.BASE_DIR, 'api-spec.yaml')
     return FileResponse(open(schema_path, 'rb'), content_type='application/yaml')
+
+class PublicSpectacularSwaggerView(SpectacularSwaggerView):
+    permission_classes = [AllowAny]
+
+class PublicSpectacularRedocView(SpectacularRedocView):
+    permission_classes = [AllowAny]
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('users.urls')),
     path('api/', include('songs.urls')),
     path('api/schema/', serve_api_schema, name='schema'),
-    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
-    path('api/docs/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+    path('api/docs/', PublicSpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('api/docs/redoc/', PublicSpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

@@ -8,12 +8,12 @@ type User = {
   role: "user" | "admin" | "guest" | "publisher";
 };
 
-type AuthContextType = {
+interface AuthContextType {
   user: User | null;
-  loading: boolean;
-  refreshUser: () => Promise<void>;
-  logout: () => Promise<void>;
-};
+  login: (email: string, password: string) => Promise<void>;
+  logout: () => void;
+  refreshToken: () => Promise<boolean>;
+}
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -22,63 +22,77 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [loading, setLoading] = useState(true);
   const apiUrl = import.meta.env.VITE_API_URL;
 
-  const refreshUser = async () => {
-  try {
-    const res = await fetch(`${apiUrl}/user`, {
-      method: "GET",
+  const login = async (email: string, password: string) => {
+    const response = await fetch(`${apiUrl}/users/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
       credentials: "include",
+      body: JSON.stringify({ email, password }),
     });
 
-    if (res.ok) {
-      const data: User = await res.json();
-      setUser(data);
-    } else {
-      try {
-        const data = await res.json();
-        if (data?.detail === "Token Expired") {
-          setUser(null);
-          window.location.href = "/login";
-          return;
-        }
-      } catch {
-        // ignore JSON parse errors
-      }
-      setUser(null);
+    if (!response.ok) {
+      throw new Error("Login failed");
     }
-  } catch {
-    setUser(null);
-  } finally {
-    setLoading(false);
-  }
-};
 
-  const logout = async () => {
-  const res = await fetch(`${apiUrl}/logout`, {
-    method: "POST",
-    credentials: "include",
-  });
+    const data = await response.json();
+    await fetchUser();
+  };
 
-  if (res.status === 403) {
+  const refreshToken = async (): Promise<boolean> => {
     try {
-      const data = await res.json();
-      if (data?.detail === "Token Expired") {
+      const response = await fetch(`${apiUrl}/users/refresh/`, {
+        method: "POST",
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        return true;
+      }
+      return false;
+    } catch {
+      return false;
+    }
+  };
+
+  const fetchUser = async () => {
+    try {
+      const response = await fetch(`${apiUrl}/users/user`, {
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        const userData = await response.json();
+        setUser(userData);
+      } else {
         setUser(null);
-        return;
       }
     } catch {
-      // ignore JSON parse errors
+      setUser(null);
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
-  setUser(null);
-};
+  const logout = async () => {
+    try {
+      await fetch(`${apiUrl}/users/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
+    } catch {
+      // Handle error if needed
+    }
+    setUser(null);
+  };
 
   useEffect(() => {
-    refreshUser();
+    fetchUser();
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, loading, refreshUser, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, refreshToken }}>
       {children}
     </AuthContext.Provider>
   );

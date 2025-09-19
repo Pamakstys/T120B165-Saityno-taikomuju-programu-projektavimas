@@ -39,19 +39,74 @@ class LoginView(APIView):
         payload = {
             'id':user.id,
             'exp':datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(days=1),
-            'iat': datetime.datetime.now(datetime.timezone.utc)
+            'iat': datetime.datetime.now(datetime.timezone.utc),
+            'type': 'access'
         }
         
+        refresh_payload = {
+            'id': user.id,
+            'exp': datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(days=7),  # 7 days
+            'iat': datetime.datetime.now(datetime.timezone.utc),
+            'type': 'refresh'
+        }
+
         token = jwt.encode(payload, SECRET, algorithm='HS256')
+        refresh_token = jwt.encode(refresh_payload, SECRET, algorithm='HS256')
 
         response = Response()
         response.set_cookie(key='jwt', value=token, httponly=True)
         response.data = {
-            'jwt': token
+            'jwt': token,
+            'refresh_token': refresh_token
         }
 
         return response
     
+class RefreshTokenView(APIView):
+    permission_classes = [AllowAny]
+    authentication_classes = []
+    
+    def post(self, request):
+        refresh_token = request.COOKIES.get('refresh_jwt')
+        
+        if not refresh_token:
+            raise AuthenticationFailed('No refresh token provided')
+        
+        try:
+            payload = jwt.decode(refresh_token, SECRET, algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('Refresh token expired')
+        except jwt.InvalidTokenError:
+            raise AuthenticationFailed('Invalid refresh token')
+        
+        # Verify it's a refresh token
+        if payload.get('type') != 'refresh':
+            raise AuthenticationFailed('Invalid token type')
+        
+        user = User.objects.filter(id=payload['id']).first()
+        if not user:
+            raise AuthenticationFailed('User not found')
+        
+        # Generate new access token
+        new_payload = {
+            'id': user.id,
+            # 'exp': datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=15),
+            'exp': datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(seconds=30),
+            'iat': datetime.datetime.now(datetime.timezone.utc),
+            'type': 'access'
+        }
+        
+        new_access_token = jwt.encode(new_payload, SECRET, algorithm='HS256')
+        
+        response = Response({'message': 'Token refreshed'})
+        response.set_cookie(key='jwt', value=new_access_token, httponly=True)
+        response.data = {
+            'jwt': new_access_token
+        }
+        
+        return response
+
+
 class UserView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request):

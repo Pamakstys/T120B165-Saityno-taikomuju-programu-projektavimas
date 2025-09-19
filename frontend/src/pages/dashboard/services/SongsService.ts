@@ -1,4 +1,5 @@
 import type { Song } from "../../../models/music";
+import { apiClient } from '../../../context/apiClient'
 
 const API_URL = `${import.meta.env.VITE_API_URL}/songs`;
 
@@ -11,8 +12,8 @@ export async function getSong(id: number): Promise<Song> {
 }
 
 export async function listSongs(): Promise<Song[]> {
-  const response = await fetch(`${API_URL}/list/`, {
-    credentials: 'include',
+  const response = await apiClient(`/songs/list/`, {
+    method: 'GET',
   });
   if (!response.ok) throw new Error('Failed to fetch songs');
   return response.json();

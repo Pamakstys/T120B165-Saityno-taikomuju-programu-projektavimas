@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'drf_spectacular', # for API documentation
     'corsheaders',
     'users',
     'songs',
@@ -82,13 +83,20 @@ TEMPLATES = [
 ]
 
 REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'users.helpers.JWTAuthentication.JWTAuthentication',
-    ]
+    ],
 }
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Music App API',
+    'DESCRIPTION': 'API documentation for Music App',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': True,
+}
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
@@ -155,7 +163,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-CORS_ORIGIN_WHITELIST = os.getenv('CORS_ORIGIN_WHITELIST', 'http://localhost:3000').split(',')
+CORS_ORIGIN_WHITELIST = os.getenv('CORS_ORIGIN_WHITELIST', 'http://localhost:3000, http://localhost:8000').split(',')
 
 CORS_ALLOW_CREDENTIALS = True
 

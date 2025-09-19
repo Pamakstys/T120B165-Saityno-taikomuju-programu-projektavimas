@@ -38,7 +38,7 @@ class LoginView(APIView):
         
         payload = {
             'id':user.id,
-            'exp':datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(seconds=10),
+            'exp':datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=10),
             'iat': datetime.datetime.now(datetime.timezone.utc),
             'role': user.role,
             'type': 'access'

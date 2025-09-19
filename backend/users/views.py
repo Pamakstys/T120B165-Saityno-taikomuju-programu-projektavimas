@@ -40,6 +40,7 @@ class LoginView(APIView):
             'id':user.id,
             'exp':datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(seconds=10),
             'iat': datetime.datetime.now(datetime.timezone.utc),
+            'role': user.role,
             'type': 'access'
         }
         
@@ -93,6 +94,7 @@ class RefreshTokenView(APIView):
             'id': user.id,
             'exp': datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=15),
             'iat': datetime.datetime.now(datetime.timezone.utc),
+            'role': user.role,
             'type': 'access'
         }
         

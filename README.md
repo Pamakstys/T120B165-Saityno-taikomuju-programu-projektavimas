@@ -1,5 +1,7 @@
 T120B165 Saityno taikomųjų programų projektavimas 
 
+Galutinė projekto ataskaita: [vitpam_projekto_ataskaita](https://github.com/Pamakstys/T120B165-Saityno-taikomuju-programu-projektavimas/blob/main/vitpam_projekto_ataskaita.pdf)
+
 1. Sprendžiamo uždavinio aprašymas  
 1.1. Sistemos paskirtis  
 Projekto tikslas – suteikti galimybę vartotojams tvarkyti muzikos duomenis (atlikėjus, albumus ir dainas), dalintis savo kolekcijomis bei lengvai atrasti naują muziką.  
